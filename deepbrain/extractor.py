@@ -57,9 +57,9 @@ class Extractor:
         #tf.compat.v1.reset_default_graph()
         return prob
     
-    def run_wrapper(self, _process, image):
+    def run_wrapper(self, image):
         with Pool(1) as p:
-            return p.apply(_process, (image,))
+            return p.apply(self.run, (image,))
 
 def subfolder_list(dir_name):
     return [f.path for f in os.scandir(dir_name) if f.is_dir()]
