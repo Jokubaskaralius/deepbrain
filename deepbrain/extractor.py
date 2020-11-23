@@ -50,4 +50,5 @@ class Extractor:
 
         prob = self.sess.run(self.prob, feed_dict={self.training: False, self.img: img}).squeeze()
         prob = resize(prob, (shape), mode='constant', anti_aliasing=True)
+        self.sess.close()
         return prob
