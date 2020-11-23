@@ -56,6 +56,10 @@ class Extractor:
         prob = resize(prob, (shape), mode='constant', anti_aliasing=True)
         #tf.compat.v1.reset_default_graph()
         return prob
+    
+    def run_wrapper(self, _process, image):
+        with Pool(1) as p:
+            return p.apply(_process, (image,))
 
 def subfolder_list(dir_name):
     return [f.path for f in os.scandir(dir_name) if f.is_dir()]
@@ -65,7 +69,7 @@ def _process(image):
     prob = ext.run(image)
     return prob
 
-def process_image(image):
+def process_image(image, _process):
     with Pool(1) as p:
         temp = p.apply(_process, (image,))
         print(temp)
@@ -89,7 +93,7 @@ def worksForBatch():
                 img = nib.load(file_path)
                 data = img.get_fdata()
                 #prob = ext.run(image)
-                prob = process_image(data)
+                prob = process_image(data, _process)
                 mask = prob > 0.5
                 print(mask)
                 print("Next")
@@ -99,3 +103,5 @@ def worksForBatch():
     while(True):
         pass
 
+
+#worksForBatch()
